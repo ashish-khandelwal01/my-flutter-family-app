@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 const Text(
                   "Cherished Family Moments ❤️",
                   style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 24,
                     fontWeight: FontWeight.w700,
                     color: Colors.purple,
                   ),
