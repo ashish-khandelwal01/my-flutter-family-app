@@ -31,7 +31,7 @@ jobs:
           flutter pub get
 
       - name: Build Web App
-        run: flutter build web --release --base-href /family-app/
+        run: flutter build web --release --base-href /my-flutter-family-app/
 
       - name: Build APK
         run: flutter build apk --release --split-per-abi
