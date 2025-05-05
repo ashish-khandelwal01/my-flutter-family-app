@@ -1,0 +1,59 @@
+name: Deploy to GitHub Pages and Release APK
+
+on:
+  push:
+    branches:
+      - main
+permissions:
+  checks: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.3'
+
+      - name: Install Dependencies
+        run: |
+          flutter clean
+          flutter pub get
+
+      - name: Build Web App
+        run: flutter build web --release --base-href /MyFlutterApp/
+
+      - name: Build APK
+        run: flutter build apk --release --split-per-abi
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          personal_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          publish_dir: build/web
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+
+      - name: Upload APK to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "Release ${{ github.sha }}"
+          tag_name: "release-${{ github.run_number }}"
+          files: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
