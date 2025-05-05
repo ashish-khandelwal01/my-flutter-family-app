@@ -1,3 +1,30 @@
+/**
+ * Family Moments App - Gallery Data
+ *
+ * This file contains the data for the image galleries displayed in the app.
+ * It organizes images and captions for different family members into a structured format.
+ *
+ * Structure:
+ *  - Each family member is represented as a key in the `GalleryData.gallery` map.
+ *  - The value for each key is a list of maps, where each map contains:
+ *      - 'path': The file path to the image asset.
+ *      - 'caption': A descriptive caption for the image.
+ *
+ * Example:
+ *  {
+ *    'Papa': [
+ *      {'path': 'assets/Papa/papa1.jpg', 'caption': 'My hero, my dad 👨‍👧‍👦'},
+ *      {'path': 'assets/Papa/papa2.jpg', 'caption': 'Guiding us with wisdom 📖'},
+ *    ],
+ *    ...
+ *  }
+ *
+ * Usage:
+ *  - The data is accessed in main.dart to dynamically generate gallery buttons and display images.
+ *  - Ensure all image paths and captions are accurate and assets are included in pubspec.yaml.
+ */
+
+
 class GalleryData {
   final Map<String, List<Map<String, String>>> images;
 

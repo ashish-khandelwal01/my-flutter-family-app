@@ -1,3 +1,18 @@
+/*
+* Family Moments App - Main Entry Point
+
+* This file serves as the entry point for the Family Moments App.
+* It initializes the MaterialApp and sets up:
+* - Floating Balloons: Smooth balloon animation using TweenAnimationBuilder.
+* - Background Music: Looped music playback with auto-play on mobile and a play button on web.
+* - Image Galleries: Displays swipeable image galleries with captions for family members.
+* Features:
+* - A family-oriented theme with warm colors and animations.
+* - Dynamic gallery buttons generated from data in gallery_data.dart.
+* - Auto-scrolling image galleries with manual swipe support.
+* Make sure assets (music and images) are properly configured in pubspec.yaml.
+*/
+
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
