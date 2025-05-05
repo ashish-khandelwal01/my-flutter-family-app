@@ -108,8 +108,6 @@ class GalleryData {
         {'path': 'assets/Family/family22.jpg', 'caption': 'The joy of family moments ❤️'},
         {'path': 'assets/Family/family23.jpg', 'caption': 'Forever grateful for love 💕'},
         {'path': 'assets/Family/Family24.jpg', 'caption': 'A bond that never breaks 🔗'},
-        {'path': 'assets/Family/Family25.jpg', 'caption': 'The strength of togetherness 💪'},
-        {'path': 'assets/Family/Family26.jpg', 'caption': 'A family full of joy 😊'},
         {'path': 'assets/Family/family27.jpg', 'caption': 'The heart of our happiness ❤️'},
         {'path': 'assets/Family/family28.jpg', 'caption': 'Forever our safe haven 🛡️'},
         {'path': 'assets/Family/family29.jpg', 'caption': 'The joy of being together 🌟'},
