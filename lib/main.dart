@@ -196,7 +196,7 @@ class ImageGalleryScreen extends StatefulWidget {
 
 class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
   late final PageController _pageController;
-  late final Timer _timer;
+  Timer? _timer;
   int _currentPage = 0;
 
   @override
@@ -204,6 +204,10 @@ class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
     super.initState();
     _pageController = PageController();
 
+    _startAutoScroll();
+  }
+
+  void _startAutoScroll() {
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       if (_currentPage < widget.images.length - 1) {
         _currentPage++;
@@ -218,10 +222,14 @@ class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
     });
   }
 
+  void _stopAutoScroll() {
+    _timer?.cancel();
+  }
+
   @override
   void dispose() {
     _pageController.dispose();
-    _timer.cancel();
+    _stopAutoScroll();
     super.dispose();
   }
 
@@ -236,80 +244,86 @@ class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
         backgroundColor: Colors.pinkAccent.shade100,
         iconTheme: const IconThemeData(color: Colors.deepPurple),
       ),
-      body: PageView.builder(
-        controller: _pageController,
-        itemCount: widget.images.length,
-        itemBuilder: (context, index) {
-          final imagePath = widget.images[index];
-          final caption = widget.captions[index];
+      body: GestureDetector(
+        onPanDown: (_) => _stopAutoScroll(), // Stop auto-scroll on user interaction
+        onPanEnd: (_) => _startAutoScroll(), // Restart auto-scroll after interaction
+        child: PageView.builder(
+          controller: _pageController,
+          itemCount: widget.images.length,
+          onPageChanged: (index) {
+            _currentPage = index; // Update the current page index
+          },
+          itemBuilder: (context, index) {
+            final imagePath = widget.images[index];
+            final caption = widget.captions[index];
 
-          return AnimatedBuilder(
-            animation: _pageController,
-            builder: (context, child) {
-              double value = 1.0;
-              if (_pageController.position.haveDimensions) {
-                value = _pageController.page! - index;
-                value = (1 - (value.abs() * 0.3)).clamp(0.8, 1.0);
-              }
-              return Transform.scale(
-                scale: value,
-                child: child,
-              );
-            },
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // ✅ Blurred background image
-                Image.asset(imagePath, fit: BoxFit.cover),
-                Positioned.fill(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                    child: Container(
-                      color: Colors.black.withOpacity(0.3),
+            return AnimatedBuilder(
+              animation: _pageController,
+              builder: (context, child) {
+                double value = 1.0;
+                if (_pageController.position.haveDimensions) {
+                  value = _pageController.page! - index;
+                  value = (1 - (value.abs() * 0.3)).clamp(0.8, 1.0);
+                }
+                return Transform.scale(
+                  scale: value,
+                  child: child,
+                );
+              },
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // ✅ Blurred background image
+                  Image.asset(imagePath, fit: BoxFit.cover),
+                  Positioned.fill(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                      child: Container(
+                        color: Colors.black.withOpacity(0.3),
+                      ),
                     ),
                   ),
-                ),
-                // ✅ Foreground image and caption
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Image.asset(
-                          imagePath,
-                          fit: BoxFit.contain,
+                  // ✅ Foreground image and caption
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Image.asset(
+                            imagePath,
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      caption,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          const Shadow(
-                            blurRadius: 4,
-                            color: Colors.black45,
-                            offset: Offset(1, 1),
-                          )
-                        ],
+                      const SizedBox(height: 20),
+                      Text(
+                        caption,
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            const Shadow(
+                              blurRadius: 4,
+                              color: Colors.black45,
+                              offset: Offset(1, 1),
+                            )
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 30),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
+                      const SizedBox(height: 30),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
 }
-
 
 class FloatingBalloons extends StatefulWidget {
   const FloatingBalloons({Key? key}) : super(key: key);
@@ -353,9 +367,9 @@ class _FloatingBalloonsState extends State<FloatingBalloons> {
         tween: Tween(begin: MediaQuery.of(context).size.height, end: -size),
         duration: Duration(milliseconds: duration),
         builder: (context, topValue, child) {
-          return Positioned(
-            top: topValue,
-            child: child!,
+          return Transform.translate(
+            offset: Offset(0, topValue),
+            child: child,
           );
         },
         child: Icon(
@@ -419,3 +433,4 @@ class _FloatingBalloonsState extends State<FloatingBalloons> {
     );
   }
 }
+
