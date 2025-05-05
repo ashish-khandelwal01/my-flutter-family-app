@@ -1,0 +1,33 @@
+name: family_app
+description: A Flutter application with image galleries and custom transitions.
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.19.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  audioplayers: ^6.4.0
+  cupertino_icons: ^1.0.5
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.14.3
+  flutter_test:
+    sdk: flutter
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png"
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/Ashish/
+    - assets/Family/
+    - assets/icon/
+    - assets/Mummy/
+    - assets/music/
+    - assets/Papa/
+    - assets/Swati/
